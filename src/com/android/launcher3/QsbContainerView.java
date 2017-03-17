@@ -99,16 +99,18 @@ public class QsbContainerView extends FrameLayout {
                 sSavedWidgetId = savedInstanceState.getInt(QSB_WIDGET_ID, -1);
             }
             mWrapper = new FrameLayout(getActivity());
-            mWrapper.addView(createQsb(inflater, mWrapper));
-            return mWrapper;
+            View qsb = createQsb(inflater, mWrapper);
+            if (qsb != null) {
+                mWrapper.addView(qsb);
+            }
+             return mWrapper;
         }
 
         private View createQsb(LayoutInflater inflater, ViewGroup container) {
             Launcher launcher = Launcher.getLauncher(getActivity());
             mWidgetInfo = getSearchWidgetProvider(launcher);
             if (mWidgetInfo == null) {
-                // There is no search provider, just show the default widget.
-                return getDefaultView(inflater, container, false);
+            return null;
             }
 
             SharedPreferences prefs = Utilities.getPrefs(launcher);
@@ -218,7 +220,10 @@ public class QsbContainerView extends FrameLayout {
         private void rebindFragment() {
             if (mWrapper != null && getActivity() != null) {
                 mWrapper.removeAllViews();
-                mWrapper.addView(createQsb(getActivity().getLayoutInflater(), mWrapper));
+                View qsb = createQsb(getActivity().getLayoutInflater(), mWrapper);
+                if (qsb != null) {
+                    mWrapper.addView(qsb);
+                }
             }
         }
 
